@@ -14,47 +14,59 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button addBtn, browseBtn;
-    ProgressBar loadData;
+    private Button btnBrowse, btnAddNote;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+        
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        addBtn = findViewById(R.id.button2);
-        browseBtn = findViewById(R.id.button3);
-        loadData = findViewById(R.id.progressBar);
+        btnBrowse = findViewById(R.id.btnBrowse);
+        btnAddNote = findViewById(R.id.btnAddNote);
+        progressBar = findViewById(R.id.progressBar);
 
-        addBtn.setOnClickListener(v -> {
+        btnBrowse.setOnClickListener(v -> {
+            loadBrowseActivity();
+        });
+
+        btnAddNote.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, AddNoteActivity.class);
             startActivity(intent);
         });
+    }
 
-        browseBtn.setOnClickListener(v -> {
-            loadData.setVisibility(View.VISIBLE);
+    private void loadBrowseActivity() {
+        // Show progress bar and disable buttons
+        progressBar.setVisibility(View.VISIBLE);
+        btnBrowse.setEnabled(false);
+        btnAddNote.setEnabled(false);
 
-            new Thread(() -> {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+        // Multitasking using Thread
+        new Thread(() -> {
+            try {
+                // Mock delay for 2 seconds
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
-                runOnUiThread(() -> {
-                    loadData.setVisibility(View.GONE);
-                    Intent intent = new Intent(MainActivity.this, BrowseNoteActivity.class);
-                    startActivity(intent);
-                    finish();
-                });
-
-            }).start();
-        });
+            // Update UI on UI Thread
+            runOnUiThread(() -> {
+                progressBar.setVisibility(View.GONE);
+                btnBrowse.setEnabled(true);
+                btnAddNote.setEnabled(true);
+                
+                Intent intent = new Intent(MainActivity.this, BrowseNoteActivity.class);
+                startActivity(intent);
+            });
+        }).start();
     }
 }

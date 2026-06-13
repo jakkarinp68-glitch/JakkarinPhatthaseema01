@@ -43,6 +43,8 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     implementation(libs.gson)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
     annotationProcessor(libs.room.compiler)
 
     implementation(libs.activity.ktx)

@@ -11,6 +11,14 @@ public class TextNote extends Note {
         this.content = content;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public String getTextContent() {
+        return content;
+    }
+
     @Override
     public String getSummary() {
         return this.content != null ? this.content : "";
